@@ -4,6 +4,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {
   authenticationFailAction,
   authenticationSuccessAction,
+  autoLoginAction,
   logoutAction,
   startAuthenticationWithEmailAndPassAction,
   startAuthenticationWithGoogleAction,
@@ -17,6 +18,7 @@ import {GoogleAuthProvider, signInWithPopup,} from "firebase/auth";
 import {FirebaseAuth} from "../../firebase/firebase.config";
 import {AuthService} from "../auth.service";
 import {Router} from "@angular/router";
+import {User} from "../user.model";
 
 export interface AuthApiResponse {
   idToken: string;
@@ -34,39 +36,40 @@ export class AuthEffects {
   constructor(private actions$: Actions,
               private http: HttpClient,
               private authService: AuthService,
-              private router: Router) {
+              private router: Router,
+  ) {
   }
 
-  loginWithGoogle$ = createEffect(
+  authLoginWithGoogle$ = createEffect(
     () => this.actions$.pipe(
       ofType(startAuthenticationWithGoogleAction),
       switchMap(async () => {
 
         const res = await signInWithPopup(FirebaseAuth, new GoogleAuthProvider());
 
-        const {email, displayName, uid} = res.user;
+        const {email, uid} = res.user;
 
         const tokenResults = await res.user.getIdTokenResult();
 
-
         const _tokenExpirationTime = (new Date(tokenResults.expirationTime).getTime() - new Date().getTime()) / 1000;
 
-        return authenticationSuccessAction({
-          payload: {
-            uid: uid!,
-            userName: displayName!,
-            email: email!,
-            _idToken: tokenResults.token,
-            _tokenExpirationTime: _tokenExpirationTime.toString(),
-          }
-        });
+        const user: User = {
+          uid: uid!,
+          email: email!,
+          _idToken: tokenResults.token,
+          _tokenExpirationTime: _tokenExpirationTime.toString(),
+        };
+
+        localStorage.setItem('userAuthenticated', JSON.stringify(user));
+
+        return authenticationSuccessAction({payload: user});
       }),
       tap(({payload}) => this.authService.setAutoLogoutTimer(+payload._tokenExpirationTime)),
       catchError(err => of(authenticationFailAction({payload: err})))
     ),
   );
 
-  signUp$ = createEffect(
+  authSignUp$ = createEffect(
     () => this.actions$.pipe(
       ofType(startSignUpAction),
       switchMap(({payload}) => {
@@ -89,7 +92,7 @@ export class AuthEffects {
     )
   );
 
-  loginWithEmailAndPassword$ = createEffect(
+  authLoginWithEmailAndPassword$ = createEffect(
     () => this.actions$.pipe(
       ofType(startAuthenticationWithEmailAndPassAction),
       switchMap(({payload}) => {
@@ -111,15 +114,28 @@ export class AuthEffects {
     )
   );
 
-  authRedirect$ = createEffect(
+  authAutoLogin$ = createEffect(
     () => this.actions$.pipe(
-      ofType(authenticationSuccessAction),
-      tap(({payload}) => {
-        if (payload) {
-          this.router.navigate(['/todos']);
-        }
+      ofType(autoLoginAction),
+      map(() => {
+
+        const userData = localStorage.getItem('userAuthenticated');
+
+        if (!userData) return {type: 'EMPTY'};
+
+        const loadedUser: User = JSON.parse(userData);
+
+        if (!loadedUser._idToken) return {type: 'EMPTY'};
+
+        const user: User = {
+          ...loadedUser,
+        };
+
+        this.authService.setAutoLogoutTimer(+user._tokenExpirationTime);
+
+        return authenticationSuccessAction({payload: user});
       })
-    ), {dispatch: false},
+    )
   )
 
   authLogout$ = createEffect(
@@ -127,8 +143,20 @@ export class AuthEffects {
       ofType(logoutAction),
       tap(() => {
         this.authService.clearAutoLogoutTimer();
+        localStorage.removeItem('userAuthenticated');
         this.router.navigate(['/auth']);
-      })
+      }),
+    ), {dispatch: false},
+  )
+
+  authRedirect$ = createEffect(
+    () => this.actions$.pipe(
+      ofType(authenticationSuccessAction),
+      tap(({payload}) => {
+        if (payload) {
+          this.router.navigate(['/todos']);
+        }
+      }),
     ), {dispatch: false},
   )
 

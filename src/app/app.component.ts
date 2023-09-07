@@ -5,6 +5,7 @@ import {Store} from "@ngrx/store";
 import {AppState} from "./store/app.reducer";
 import {selectAuth} from "./auth/store/auth.selectors";
 import {map, Observable} from "rxjs";
+import {autoLoginAction} from "./auth/store/auth.actions";
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.store.dispatch(autoLoginAction());
+
     this.isLoading$ = this.store.select(selectAuth).pipe(
       map(authState => authState.isLoading),
     )

@@ -1,9 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgbAlert} from "@ng-bootstrap/ng-bootstrap";
 import {RouterLink} from "@angular/router";
-import {Observable, Subscription} from "rxjs";
+import {Observable} from "rxjs";
 import {AppState} from "../store/app.reducer";
 import {Store} from "@ngrx/store";
 import {
@@ -21,14 +21,13 @@ import {selectErrorMessage} from "./store/auth.selectors";
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent implements OnInit, OnDestroy {
+export class AuthComponent implements OnInit {
 
   isLoginMode: boolean = true;
 
   authForm: FormGroup;
   errorMessage: Observable<string | null>
 
-  autoNavigationSubs: Subscription;
 
   constructor(
     private fb: FormBuilder,
@@ -40,21 +39,11 @@ export class AuthComponent implements OnInit, OnDestroy {
     })
 
     this.errorMessage = new Observable<string | null>();
-    this.autoNavigationSubs = new Subscription();
   };
 
   ngOnInit() {
+
     this.errorMessage = this.store.select(selectErrorMessage);
-
-
-    // //Todo: Esto puede hacerse como un effect.
-    // this.autoNavigationSubs = this.store.select(selectUser).subscribe(
-    //   user => {
-    //     if (user) {
-    //       this.router.navigate(['/todos']);
-    //     }
-    //   }
-    // )
   };
 
   onSubmitWithEmailAndPassword() {
@@ -79,11 +68,6 @@ export class AuthComponent implements OnInit, OnDestroy {
   onCleanError() {
 
     this.store.dispatch(cleanupAuthErrorAction());
-  };
-
-  ngOnDestroy() {
-
-    this.autoNavigationSubs.unsubscribe();
   };
 
 }

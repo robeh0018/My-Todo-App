@@ -25,6 +25,10 @@ export const startSignUpAction = createAction(
   }>()
 );
 
+export const autoLoginAction = createAction(
+  '[Auth] Auto Login',
+);
+
 export const authenticationSuccessAction = createAction(
   '[Auth] Authentication Success',
   props<{
