@@ -1,0 +1,28 @@
+<ng-template #content let-offcanvas>
+  <div>
+    <div class="offcanvas-header">
+      <h4 class="offcanvas-title">Todo List</h4>
+      <button type="button" class="btn-close" aria-label="Close"
+              (click)="offcanvas.dismiss('Cross click')"></button>
+    </div>
+    <div class="offcanvas-body">
+      <ul class="list-group ">
+        <li *ngFor="let todo of ( todoStateObservable$ | async )?.todos; let i = index"
+            class="list-group-item border-pink p-3 mt-1"
+            [ngClass]="((todoStateObservable$ | async)?.todoActivated?.id === todo.id) ? 'active' : ''"
+        >
+          <a class="text-decoration-none d-flex "
+             [ngClass]=" (todo.done) ? 'text-decoration-line-through' : ''"
+             [routerLink]="[todo.id]">
+            <span class="text-body-tertiary me-auto">#{{i + 1}}</span>
+            <span class="text-pink"><strong>{{todo.title}}</strong></span>
+            <span class="text-body-tertiary ms-auto">#{{todo.createdAt}}</span>
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</ng-template>
+
+<app-todo-options [offcanvasContent]="content"></app-todo-options>

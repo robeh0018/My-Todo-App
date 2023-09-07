@@ -1,6 +1,13 @@
 import {createReducer, on} from "@ngrx/store";
 import {User} from "../user.model";
-import {login, startLoading} from "./auth.actions";
+import {
+  authenticationFailAction,
+  authenticationSuccessAction,
+  cleanupAuthErrorAction,
+  logoutAction,
+  startAuthenticationWithEmailAndPassAction,
+  startAuthenticationWithGoogleAction
+} from "./auth.actions";
 
 
 export interface AuthState {
@@ -18,7 +25,7 @@ const initialState: AuthState = {
 export const authReducer = createReducer(
   initialState,
 
-  on(startLoading, (state) => {
+  on(startAuthenticationWithGoogleAction, (state) => {
 
     return {
       ...state,
@@ -26,12 +33,51 @@ export const authReducer = createReducer(
     }
   }),
 
-  on(login, (state, {payload}) => {
+  on(startAuthenticationWithEmailAndPassAction, (state) => {
 
     return {
       ...state,
-      user: payload,
-      isLoading: false,
+      isLoading: true,
     }
-  })
+  }),
+
+  on(logoutAction, (state) => {
+
+    return {
+      ...state,
+      user: null,
+    }
+  }),
+
+  on(authenticationSuccessAction, (state, {payload}) => {
+
+    return {
+      ...state,
+      isLoading: false,
+      user: payload,
+      authError: null,
+    }
+  }),
+
+  on(authenticationFailAction, (state, {payload}) => {
+
+    console.log(payload);
+
+    return {
+      ...state,
+      isLoading: false,
+      user: null,
+      authError: payload,
+    }
+  }),
+
+  on(cleanupAuthErrorAction, (state) => {
+
+    return {
+      ...state,
+      isLoading: false,
+      user: null,
+      authError: null,
+    }
+  }),
 )

@@ -1,0 +1,69 @@
+<div class="container-sm">
+  <div class='row d-flex justify-content-center align-items-center text-center flex-column' style="height: 100vh">
+
+    <div *ngIf="(errorMessage | async)" class="col-md-10 col-lg-6 mt-auto">
+      <p>
+        <ngb-alert class="bg-danger-subtle" (closed)="onCleanError()" [dismissible]="true">
+          <strong>Warning!</strong> {{ errorMessage | async }}.
+        </ngb-alert>
+      </p>
+    </div>
+
+    <div
+      class="col-md-10 col-lg-6 border border-secondary shadow-lg m-auto h-50 p-1 p-md-5
+     d-flex flex-column justify-content-center rounded-3">
+
+      <h2>{{ (isLoginMode) ? 'Sign In' : 'Sign Up' }}
+        <i class="bi bi-box-arrow-in-right text-pink"></i>
+      </h2>
+
+      <div class="row-cols-1 mt-2">
+        <form [formGroup]="authForm">
+          <div class="form-floating mt-2">
+            <input formControlName="email" type="email" class="form-control text-bg-secondary" id="name"
+                   [ngClass]="authForm.get('email')?.invalid && authForm.get('email')?.touched  ? 'is-invalid' : ''"
+                   placeholder="name@example.com">
+            <label class="form-label" for="name">Email</label>
+          </div>
+
+          <div class="form-floating mt-2">
+            <input formControlName="password" type="password" class="form-control text-bg-secondary"
+                   id="password"
+                   [ngClass]="authForm.get('password')?.invalid && authForm.get('password')?.touched  ? 'is-invalid' : ''"
+                   placeholder="This is a password">
+            <label class="form-label" for="password">Password</label>
+          </div>
+        </form>
+      </div>
+
+      <div class="row d-flex mt-2">
+        <div class="col-12 col-md-8 m-auto mt-2">
+          <a routerLink="/auth/register" (click)="onSwitchMode()">
+            {{ (isLoginMode) ? 'Do you have no an account' : 'Do you have an account already? '}}
+          </a>
+
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-md-4 mt-2">
+            <button class="btn btn-outline-secondary w-100" (click)="onSubmitWithGoogle()">
+              <i class="bi bi-google text-pink"></i>oogle
+            </button>
+          </div>
+          <div class="col-12 col-md-8 mt-2">
+            <button
+              [disabled]="authForm.invalid"
+              type="submit"
+              class="btn btn-outline-pink w-100"
+              (click)="onSubmitWithEmailAndPassword()"
+            >{{ isLoginMode ? 'sign-in' : 'sign-up'}}
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+
+    </div>
+  </div>
+</div>

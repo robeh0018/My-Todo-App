@@ -1,5 +1,3 @@
-/// <reference types="@angular/localize" />
-
 import {bootstrapApplication} from "@angular/platform-browser";
 import {AppComponent} from "./app/app.component";
 import {provideStore} from '@ngrx/store';
@@ -11,16 +9,17 @@ import {appRoutes} from "./app/app.routes";
 import {provideEffects} from '@ngrx/effects';
 import {AuthEffects} from "./app/auth/store/auth.effects";
 import {provideHttpClient} from "@angular/common/http";
+import {TodoEffects} from "./app/todo/store/todo.effects";
 
 
 bootstrapApplication(AppComponent, {
-  providers: [
-    provideRouter(appRoutes),
-    provideStore(appReducer),
-    provideHttpClient(),
-    importProvidersFrom(),
-    provideStoreDevtools({maxAge: 25, logOnly: !isDevMode()}),
-    provideEffects([AuthEffects])
-  ]
+    providers: [
+        provideRouter(appRoutes),
+        provideStore(appReducer),
+        provideHttpClient(),
+        importProvidersFrom(),
+        provideStoreDevtools({maxAge: 25, logOnly: !isDevMode()}),
+        provideEffects([AuthEffects, TodoEffects])
+    ]
 })
-  .catch(() => console.log);
+    .catch(() => console.log);

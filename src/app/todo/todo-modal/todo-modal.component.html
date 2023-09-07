@@ -1,0 +1,40 @@
+<div class="modal-header text-bg-dark text-pink">
+  <h4 class="modal-title">Add or Update Todo</h4>
+  <button type="button" class="btn-close" aria-label="Close"
+          (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+<div class="modal-body bg-dark-subtle">
+  <form [formGroup]="modalForm">
+    <div class="form-floating mt-2">
+      <input type="text" class="form-control text-bg-secondary" id="name"
+             formControlName="title"
+             [ngClass]="modalForm.get('title')?.invalid && modalForm.get('title')?.touched  ? 'is-invalid' : ''"
+             placeholder="name@example.com">
+      <label class="form-label" for="name">Title</label>
+    </div>
+    <div class="form-floating mt-2">
+            <textarea class="form-control text-bg-secondary"
+                      formControlName="description"
+                      [ngClass]="modalForm.get('description')?.invalid && modalForm.get('description')?.touched  ? 'is-invalid' : ''"
+                      placeholder="name@example.com"></textarea>
+      <label class="form-label" for="name">Description</label>
+    </div>
+    <div class="form-check d-flex align-items-center justify-content-center fs-4 p-2">
+      <input class="form-check-input form-check-reverse" type="checkbox" id="flexCheckChecked"
+             formControlName="done"
+             [checked]="(todoActivated) ? todoActivated.done : false">
+      <label class="form-check-label text-dark ms-1" for="flexCheckChecked">
+        Mark as completed
+      </label>
+    </div>
+
+  </form>
+</div>
+<div class="modal-footer text-bg-dark text-pink">
+
+  <button type="button" class="btn btn-outline-teal" [disabled]="modalForm.invalid" (click)="onSubmit()">Save</button>
+  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close('Close click')">Close</button>
+</div>
+
+
+<!--todo: Hacerle tooltips a cada button-->
