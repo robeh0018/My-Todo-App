@@ -3,12 +3,17 @@ import {createSelector} from "@ngrx/store";
 
 export const selectTodosState = (state: AppState) => state.todo;
 
-export const selectTodos = createSelector(
+export const selectTodosIsLoading = createSelector(
     selectTodosState,
-    (state) => state.todos
+    (state) => state.isLoading
 );
 
 export const selectTodoActivated = createSelector(
     selectTodosState,
     (state) => state.todoActivated
+);
+
+export const selectTodosErrorMessage = createSelector(
+    selectTodosState,
+    (state) => state.errorMessage
 );

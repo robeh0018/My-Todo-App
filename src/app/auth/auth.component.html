@@ -1,16 +1,21 @@
 <div class="container-sm">
   <div class='row d-flex justify-content-center align-items-center text-center flex-column' style="height: 100vh">
-
-    <div *ngIf="(errorMessage | async)" class="col-md-10 col-lg-6 mt-auto">
+    <div *ngIf="errorMessage" class="col-md-10 col-lg-6 mt-auto">
       <p>
         <ngb-alert class="bg-danger-subtle" (closed)="onCleanError()" [dismissible]="true">
-          <strong>Warning!</strong> {{ errorMessage | async }}.
+          <strong>Warning!</strong> {{ errorMessage }}.
         </ngb-alert>
       </p>
     </div>
 
-    <div
-      class="col-md-10 col-lg-6 border border-secondary shadow-lg m-auto h-50 p-1 p-md-5
+    <div *ngIf="isLoading">
+      <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoading"
+         class="col-md-10 col-lg-6 border border-secondary shadow-lg m-auto h-50 p-1 p-md-5
      d-flex flex-column justify-content-center rounded-3">
 
       <h2>{{ (isLoginMode) ? 'Sign In' : 'Sign Up' }}
@@ -19,27 +24,45 @@
 
       <div class="row-cols-1 mt-2">
         <form [formGroup]="authForm">
-          <div class="form-floating mt-2">
+
+          <div class="form-floating mt-2 text-start">
+
             <input formControlName="email" type="email" class="form-control text-bg-secondary" id="name"
                    [ngClass]="authForm.get('email')?.invalid && authForm.get('email')?.touched  ? 'is-invalid' : ''"
                    placeholder="name@example.com">
             <label class="form-label" for="name">Email</label>
+
+            <small *ngIf="this.authForm.get('email')?.hasError('required') && this.authForm.get('email')?.touched"
+                   class="text-danger">Email is required!</small>
+
+            <small *ngIf="this.authForm.get('email')?.hasError('email') && this.authForm.get('email')?.touched"
+                   class="text-danger">This field should be an email!</small>
+
           </div>
 
-          <div class="form-floating mt-2">
+          <div class="form-floating mt-2 text-start">
             <input formControlName="password" type="password" class="form-control text-bg-secondary"
+                   (change)="seeError()"
                    id="password"
                    [ngClass]="authForm.get('password')?.invalid && authForm.get('password')?.touched  ? 'is-invalid' : ''"
                    placeholder="This is a password">
             <label class="form-label" for="password">Password</label>
+
+            <small *ngIf="this.authForm.get('password')?.hasError('required') && this.authForm.get('password')?.touched"
+                   class="text-danger">Password is required!</small>
+            <small
+              *ngIf="this.authForm.get('password')?.hasError('minlength') && this.authForm.get('password')?.touched"
+              class="text-danger">Password should have 6 or more characters</small>
+
           </div>
+
         </form>
       </div>
 
       <div class="row d-flex mt-2">
         <div class="col-12 col-md-8 m-auto mt-2">
           <a routerLink="/auth/register" (click)="onSwitchMode()">
-            {{ (isLoginMode) ? 'Do you have no an account' : 'Do you have an account already? '}}
+            {{ (isLoginMode) ? 'Do you have no an account?' : 'Do you have an account already?'}}
           </a>
 
         </div>
@@ -66,4 +89,6 @@
 
     </div>
   </div>
+
+
 </div>

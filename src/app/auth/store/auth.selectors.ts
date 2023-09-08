@@ -3,7 +3,7 @@ import {createSelector} from "@ngrx/store";
 
 export const selectAuth = (state: AppState) => state.auth;
 
-export const selectErrorMessage = createSelector(
+export const selectAuthErrorMessage = createSelector(
     selectAuth,
     (state) => state.authError
 );

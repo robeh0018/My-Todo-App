@@ -1,26 +1,33 @@
-<div class="container-sm d-inline-flex">
-  <div class="ms-auto hstack p-3 p-md-5">
+<div class="btn-group-sm">
 
-    <button class="btn btn-sm btn-outline-pink rounded-5"
-            (click)="openList()"><i class="bi bi-card-checklist"></i>
-    </button>
+  <button class="btn btn-outline-pink rounded-5"
+          ngbTooltip="Show list"
+          tooltipClass="custom-tooltip"
+          (click)="openList()"><i class="bi bi-card-checklist"></i>
+  </button>
 
-    <button class="btn btn-sm btn-outline-teal rounded-5 ms-1"
-            (click)="openModalOnAddMode()"
-    ><i class="bi bi-plus"></i>
-    </button>
+  <button class="btn btn-outline-teal rounded-5 ms-1"
+          ngbTooltip="Add todo"
+          tooltipClass="custom-tooltip"
+          (click)="openModalOnAddMode()"
+  ><i class="bi bi-plus"></i>
+  </button>
 
-    <button class="btn btn-sm btn-outline-indigo rounded-5 ms-1"
-            (click)="openModal()"
-            [disabled]="!(activatedTodo | async)"
-    ><i class="bi bi-pencil-square"></i>
-    </button>
+  <button class="btn btn-outline-indigo rounded-5 ms-1"
+          ngbTooltip="Edit todo"
+          tooltipClass="custom-tooltip"
+          (click)="openModal()"
+          [disabled]="!(activatedTodo | async)"
+  ><i class="bi bi-pencil-square"></i>
+  </button>
 
-    <button class="btn btn-sm btn-outline-danger rounded-5 ms-1"
-            (click)="onDeleteTodo()"
-            [disabled]="!(activatedTodo | async)"
-    ><i class="bi bi-trash-fill"></i>
-    </button>
+  <button class="btn btn-outline-danger rounded-5 ms-1"
+          ngbTooltip="Delete todo"
+          tooltipClass="custom-tooltip"
+          (click)="onDeleteTodo()"
+          [disabled]="!(activatedTodo | async)"
+  ><i class="bi bi-trash-fill"></i>
+  </button>
 
-  </div>
+
 </div>

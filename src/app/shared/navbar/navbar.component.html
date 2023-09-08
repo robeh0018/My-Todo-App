@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-dark-subtle sticky-top mb-3">
+  <div class="container-fluid">
+    <img
+      alt="TodoList"
+      class="navbar-brand ms-2"
+      src="https://mediabistro-production.s3.amazonaws.com/uploads/job/alt_company_logo_attachment/153565/the-list-logo.png"
+      style="max-height: 40px" width="60px">
+
+    <button class="navbar-toggler" type="button" (click)="isMenuCollapsed = !isMenuCollapsed">&#9776;</button>
+
+    <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse">
+      <ul
+        class="navbar-nav ms-auto"
+        [ngClass]="isMenuCollapsed ? 'd-flex align-items-center' : 'd-block'"
+      >
+
+        <li class="nav-item me-2">
+          <span class='text-dark'>{{(userEmail | async)}}</span>
+        </li>
+
+        <li class="nav-item">
+          <button class="btn btn-sm btn-outline-danger"
+                  ngbTooltip="Logout"
+                  tooltipClass="custom-tooltip"
+                  (click)="onLogout()"
+          >
+            <i class="bi bi-escape"></i></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -3,9 +3,8 @@ import {CommonModule} from "@angular/common";
 import {RouterModule} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {AppState} from "./store/app.reducer";
-import {selectAuth} from "./auth/store/auth.selectors";
-import {map, Observable} from "rxjs";
 import {autoLoginAction} from "./auth/store/auth.actions";
+import {ToastComponent} from "./shared/toast/toast.component";
 
 @Component({
   selector: 'app-root',
@@ -13,6 +12,7 @@ import {autoLoginAction} from "./auth/store/auth.actions";
   imports: [
     CommonModule,
     RouterModule,
+    ToastComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
@@ -20,18 +20,11 @@ import {autoLoginAction} from "./auth/store/auth.actions";
 
 export class AppComponent implements OnInit {
 
-  isLoading$: Observable<boolean> = new Observable<boolean>();
-
-
   constructor(private store: Store<AppState>) {
 
   }
 
   ngOnInit() {
     this.store.dispatch(autoLoginAction());
-
-    this.isLoading$ = this.store.select(selectAuth).pipe(
-      map(authState => authState.isLoading),
-    )
   }
 }

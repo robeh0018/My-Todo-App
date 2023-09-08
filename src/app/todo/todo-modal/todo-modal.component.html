@@ -5,20 +5,32 @@
 </div>
 <div class="modal-body bg-dark-subtle">
   <form [formGroup]="modalForm">
+
     <div class="form-floating mt-2">
       <input type="text" class="form-control text-bg-secondary" id="name"
              formControlName="title"
              [ngClass]="modalForm.get('title')?.invalid && modalForm.get('title')?.touched  ? 'is-invalid' : ''"
              placeholder="name@example.com">
       <label class="form-label" for="name">Title</label>
+      <small
+        *ngIf="this.modalForm.get('title')?.hasError('required') && this.modalForm.get('title')?.touched"
+        class="text-danger">Title is required!</small>
+      <small
+        *ngIf="this.modalForm.get('title')?.hasError('maxlength') && this.modalForm.get('title')?.touched"
+        class="text-danger">Title should have 30 characters or less</small>
     </div>
+
     <div class="form-floating mt-2">
             <textarea class="form-control text-bg-secondary"
                       formControlName="description"
                       [ngClass]="modalForm.get('description')?.invalid && modalForm.get('description')?.touched  ? 'is-invalid' : ''"
                       placeholder="name@example.com"></textarea>
       <label class="form-label" for="name">Description</label>
+      <small
+        *ngIf="this.modalForm.get('description')?.hasError('required') && this.modalForm.get('description')?.touched"
+        class="text-danger">Description is required!</small>
     </div>
+
     <div class="form-check d-flex align-items-center justify-content-center fs-4 p-2">
       <input class="form-check-input form-check-reverse" type="checkbox" id="flexCheckChecked"
              formControlName="done"

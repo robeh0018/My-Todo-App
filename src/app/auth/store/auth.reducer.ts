@@ -1,83 +1,77 @@
 import {createReducer, on} from "@ngrx/store";
 import {User} from "../user.model";
 import {
-  authenticationFailAction,
-  authenticationSuccessAction,
-  cleanupAuthErrorAction,
-  logoutAction,
-  startAuthenticationWithEmailAndPassAction,
-  startAuthenticationWithGoogleAction
+    authenticationFailAction,
+    authenticationSuccessAction,
+    cleanupAuthErrorAction,
+    logoutAction,
+    startAuthenticationWithEmailAndPassAction,
+    startAuthenticationWithGoogleAction
 } from "./auth.actions";
 
 
 export interface AuthState {
-  isLoading: boolean;
-  user: User | null;
-  authError: string | null;
+    isLoading: boolean;
+    user: User | null;
+    authError: string | null;
 }
 
 const initialState: AuthState = {
-  isLoading: false,
-  user: null,
-  authError: null,
+    isLoading: false,
+    user: null,
+    authError: null,
 }
 
 export const authReducer = createReducer(
-  initialState,
+    initialState,
 
-  on(startAuthenticationWithGoogleAction, (state) => {
+    on(startAuthenticationWithGoogleAction,
+        startAuthenticationWithEmailAndPassAction, (state) => {
 
-    return {
-      ...state,
-      isLoading: true,
-    }
-  }),
+            return {
+                ...state,
+                isLoading: true,
+            }
+        }),
 
-  on(startAuthenticationWithEmailAndPassAction, (state) => {
+    on(logoutAction, (state) => {
 
-    return {
-      ...state,
-      isLoading: true,
-    }
-  }),
+        return {
+            ...state,
+            isLoading: false,
+            user: null,
+        }
+    }),
 
-  on(logoutAction, (state) => {
+    on(authenticationSuccessAction, (state, {payload}) => {
 
-    return {
-      ...state,
-      user: null,
-    }
-  }),
+        return {
+            ...state,
+            isLoading: false,
+            user: payload,
+            authError: null,
+        }
+    }),
 
-  on(authenticationSuccessAction, (state, {payload}) => {
+    on(authenticationFailAction, (state, {payload}) => {
 
-    return {
-      ...state,
-      isLoading: false,
-      user: payload,
-      authError: null,
-    }
-  }),
+        console.log(payload);
 
-  on(authenticationFailAction, (state, {payload}) => {
+        return {
+            ...state,
+            isLoading: false,
+            user: null,
+            authError: payload,
+        }
+    }),
 
-    console.log(payload);
+    on(cleanupAuthErrorAction, (state) => {
 
-    return {
-      ...state,
-      isLoading: false,
-      user: null,
-      authError: payload,
-    }
-  }),
-
-  on(cleanupAuthErrorAction, (state) => {
-
-    return {
-      ...state,
-      isLoading: false,
-      user: null,
-      authError: null,
-    }
-  }),
+        return {
+            ...state,
+            isLoading: false,
+            user: null,
+            authError: null,
+        }
+    }),
 )

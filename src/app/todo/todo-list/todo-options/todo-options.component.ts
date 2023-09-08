@@ -1,18 +1,19 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TodoModalComponent} from "../../todo-modal/todo-modal.component";
-import {NgbModal, NgbOffcanvas} from "@ng-bootstrap/ng-bootstrap";
+import {NgbModal, NgbOffcanvas, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../../store/app.reducer";
 import {clearActivatedTodoAction, startDeleteTodoAction} from "../../store/todo.actions";
 import {Todo} from "../../todo.model";
 import {selectTodoActivated} from "../../store/todo.selectors";
 import {Observable} from "rxjs";
+import {ToastService} from "../../../shared/toast/toast.service";
 
 @Component({
   selector: 'app-todo-options',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgbTooltip],
   templateUrl: './todo-options.component.html',
   styleUrls: ['./todo-options.component.css']
 })
@@ -25,7 +26,8 @@ export class TodoOptionsComponent implements OnInit {
 
   constructor(private modalService: NgbModal,
               private offcanvasService: NgbOffcanvas,
-              private store: Store<AppState>
+              private toastService: ToastService,
+              private store: Store<AppState>,
   ) {
   };
 
@@ -54,6 +56,8 @@ export class TodoOptionsComponent implements OnInit {
 
   onDeleteTodo() {
     this.store.dispatch(startDeleteTodoAction());
+
+    this.toastService.show('Todo deleted successfully!', { customClass: 'bg-danger'})
   };
 
 }

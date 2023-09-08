@@ -39,3 +39,22 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 
 @import "bootstrap/scss/bootstrap";
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
+
+// tooltip styles.
+.custom-tooltip .tooltip-inner {
+ background-color: pink;
+  color: white;
+}
+
+.custom-tooltip.bs-tooltip-end .tooltip-arrow::before {
+  border-right-color: pink;
+}
+.custom-tooltip.bs-tooltip-start .tooltip-arrow::before {
+  border-left-color: pink;
+}
+.custom-tooltip.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: pink;
+}
+.custom-tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: pink;
+}

@@ -10,29 +10,28 @@ import {Observable} from "rxjs";
 import {TodoState} from "../store/todo.reducer";
 
 @Component({
-  selector: 'app-todo-list',
-  standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, TodoOptionsComponent],
-  templateUrl: './todo-list.component.html',
-  styleUrls: ['./todo-list.component.css']
+    selector: 'app-todo-list',
+    standalone: true,
+    imports: [CommonModule, RouterLink, RouterLinkActive, TodoOptionsComponent],
+    templateUrl: './todo-list.component.html',
+    styleUrls: ['./todo-list.component.css']
 })
 export class TodoListComponent implements OnInit {
 
-  todoStateObservable$: Observable<TodoState> = new Observable<TodoState>();
+    todoStateObservable$: Observable<TodoState> = new Observable<TodoState>();
 
-  constructor(
-    config: NgbOffcanvasConfig,
-    private store: Store<AppState>
-  ) {
+    constructor(
+        config: NgbOffcanvasConfig,
+        private store: Store<AppState>
+    ) {
 
-    config.position = 'start';
-    config.keyboard = false;
-    config.backdrop = false;
-    config.panelClass = 'text-bg-secondary rounded-end-3'
+        config.position = 'start';
+        config.keyboard = false;
+        config.backdrop = false;
+        config.panelClass = 'text-bg-secondary rounded-end-3';
+    };
 
-  };
-
-  ngOnInit() {
-    this.todoStateObservable$ = this.store.select(selectTodosState);
-  };
+    ngOnInit() {
+        this.todoStateObservable$ = this.store.select(selectTodosState);
+    };
 }

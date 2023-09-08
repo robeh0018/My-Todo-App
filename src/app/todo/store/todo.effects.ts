@@ -4,6 +4,7 @@ import {
     dataBaseFailAction,
     deleteTodoAction,
     getTodosAction,
+    setActivatedTodoAction,
     setTodoAction,
     startDeleteTodoAction,
     startFetchTodosAction,
@@ -11,7 +12,7 @@ import {
     startUpdateTodoAction,
     updateTodoAction
 } from "./todo.actions";
-import {catchError, of, switchMap} from "rxjs";
+import {catchError, map, of, switchMap} from "rxjs";
 import {collection, deleteDoc, doc, getDocs, query, setDoc, updateDoc, where} from 'firebase/firestore';
 import {FirebaseDB} from "../../firebase/firebase.config";
 import {Todo} from "../todo.model";
@@ -20,6 +21,7 @@ import {Store} from "@ngrx/store";
 import {AppState} from "../../store/app.reducer";
 import {selectTodoActivated} from "./todo.selectors";
 import {selectUser} from "../../auth/store/auth.selectors";
+import {Router} from "@angular/router";
 
 
 @Injectable()
@@ -28,8 +30,10 @@ import {selectUser} from "../../auth/store/auth.selectors";
 export class TodoEffects {
 
 
-    constructor(private actions$: Actions, private store: Store<AppState>) {
-
+    constructor(private actions$: Actions,
+                private store: Store<AppState>,
+                private router: Router,
+    ) {
     }
 
     fetchTodos$ = createEffect(
@@ -58,9 +62,9 @@ export class TodoEffects {
 
                 return getTodosAction({payload: todos})
             }),
-            catchError(err => of(dataBaseFailAction({payload: 'Unexpected error on fetchTodos',})))
+            catchError(err => of(dataBaseFailAction({payload: 'Unexpected error on fetchTodos' + err})))
         )
-    )
+    );
 
 
     addTodo$ = createEffect(
@@ -83,9 +87,9 @@ export class TodoEffects {
 
                 return setTodoAction({payload: newTodo});
             }),
-            catchError(err => of(dataBaseFailAction({payload: 'Unknown error on addTodo'})))
+            catchError(err => of(dataBaseFailAction({payload: 'Unknown error on addTodo' + err})))
         )
-    )
+    );
 
     editTodo$ = createEffect(
         () => this.actions$.pipe(
@@ -107,9 +111,9 @@ export class TodoEffects {
 
                 return updateTodoAction({payload: updatedTodo});
             }),
-            catchError(err => of(dataBaseFailAction({payload: 'Unknown error on editTodo'})))
+            catchError(err => of(dataBaseFailAction({payload: 'Unknown error on editTodo' + err})))
         )
-    )
+    );
 
     deleteTodo$ = createEffect(
         () => this.actions$.pipe(
@@ -121,8 +125,29 @@ export class TodoEffects {
 
                 return deleteTodoAction();
             }),
-            catchError(err => of(dataBaseFailAction({payload: 'Unknown error on deleteTodo'})))
+            catchError(() => of(dataBaseFailAction({payload: 'Unknown error on deleteTodo'})))
         )
-    )
+    );
+
+    autoSelectTodo$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(setTodoAction),
+            map(({payload}) => {
+
+                this.router.navigate([`/todos/${payload.id}`]);
+
+                return setActivatedTodoAction({payload: payload.id})
+            })
+        )
+    );
+
+    // todoRedirect$ = createEffect(
+    //     () => this.actions$.pipe(
+    //         ofType(clearActivatedTodoAction),
+    //         tap(() => {
+    //             this.router.navigate(['/todos/no-selected'])
+    //         })
+    //     ), {dispatch: false},
+    // )
 
 }

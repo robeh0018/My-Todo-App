@@ -1,9 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgbAlert} from "@ng-bootstrap/ng-bootstrap";
 import {RouterLink} from "@angular/router";
-import {Observable} from "rxjs";
 import {AppState} from "../store/app.reducer";
 import {Store} from "@ngrx/store";
 import {
@@ -12,7 +11,9 @@ import {
   startAuthenticationWithGoogleAction,
   startSignUpAction
 } from "./store/auth.actions";
-import {selectErrorMessage} from "./store/auth.selectors";
+import {selectAuth} from "./store/auth.selectors";
+import {Subscription} from "rxjs";
+
 
 @Component({
   selector: 'app-auth',
@@ -21,29 +22,40 @@ import {selectErrorMessage} from "./store/auth.selectors";
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })
-export class AuthComponent implements OnInit {
+
+export class AuthComponent implements OnInit, OnDestroy {
 
   isLoginMode: boolean = true;
 
   authForm: FormGroup;
-  errorMessage: Observable<string | null>
 
+  isLoading: boolean = false;
+  errorMessage: string | null;
+
+  storeSubs: Subscription;
 
   constructor(
     private fb: FormBuilder,
     private store: Store<AppState>,
   ) {
+
     this.authForm = fb.group({
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [Validators.required, Validators.minLength(6)]),
     })
 
-    this.errorMessage = new Observable<string | null>();
+    this.errorMessage = '';
+    this.storeSubs = new Subscription();
   };
 
   ngOnInit() {
 
-    this.errorMessage = this.store.select(selectErrorMessage);
+    this.storeSubs = this.store.select(selectAuth)
+      .subscribe(authState => {
+        this.isLoading = authState.isLoading;
+        this.errorMessage = authState.authError;
+      });
+
   };
 
   onSubmitWithEmailAndPassword() {
@@ -68,6 +80,14 @@ export class AuthComponent implements OnInit {
   onCleanError() {
 
     this.store.dispatch(cleanupAuthErrorAction());
+  };
+
+  seeError() {
+    console.log(this.authForm.get('password')?.hasError('required'))
+  };
+
+  ngOnDestroy() {
+    this.storeSubs.unsubscribe();
   };
 
 }
