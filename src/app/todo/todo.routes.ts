@@ -1,7 +1,7 @@
-import {Route, Routes} from "@angular/router";
+import {Route} from "@angular/router";
 import {TodoComponent} from "./todo.component";
 
-const TodoRoutes: Routes = [
+const TodoRoutes: Route[] = [
   {
     path: '', component: TodoComponent,
     children: [

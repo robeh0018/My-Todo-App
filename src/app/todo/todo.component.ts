@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {AsyncPipe, NgIf} from '@angular/common';
 import {TodoListComponent} from "./todo-list/todo-list.component";
 import {RouterOutlet} from "@angular/router";
 import {Store} from "@ngrx/store";
@@ -12,32 +12,33 @@ import {selectTodosIsLoading} from "./store/todo.selectors";
 
 
 @Component({
-    selector: 'app-todo',
-    standalone: true,
-    imports: [
-        CommonModule,
-        TodoListComponent,
-        RouterOutlet,
-        NavbarComponent
-    ],
-    templateUrl: './todo.component.html',
-    styleUrls: ['./todo.component.css']
+  selector: 'app-todo',
+  standalone: true,
+  imports: [
+    TodoListComponent,
+    RouterOutlet,
+    NavbarComponent,
+    NgIf,
+    AsyncPipe
+  ],
+  templateUrl: './todo.component.html',
+  styleUrls: ['./todo.component.css']
 })
 export class TodoComponent implements OnInit {
 
-    errorMessage: Observable<boolean>;
+  errorMessage: Observable<boolean>;
 
-    constructor(private store: Store<AppState>) {
-        this.errorMessage = new Observable<boolean>();
-    };
+  constructor(private store: Store<AppState>) {
+    this.errorMessage = new Observable<boolean>();
+  };
 
-    ngOnInit() {
-        this.store.select(selectUser).pipe(
-            take(1),
-        ).subscribe(user => {
-            this.store.dispatch(startFetchTodosAction({payload: user!.uid}))
-        });
+  ngOnInit() {
+    this.store.select(selectUser).pipe(
+      take(1),
+    ).subscribe(user => {
+      this.store.dispatch(startFetchTodosAction({payload: user!.uid}))
+    });
 
-        this.errorMessage = this.store.select(selectTodosIsLoading);
-    };
+    this.errorMessage = this.store.select(selectTodosIsLoading);
+  };
 }

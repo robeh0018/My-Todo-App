@@ -1,10 +1,8 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-no-selected',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './no-selected.component.html',
   styleUrls: ['./no-selected.component.css']
 })

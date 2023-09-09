@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {NgClass, NgForOf} from '@angular/common';
 import {NgbToast} from "@ng-bootstrap/ng-bootstrap";
 import {ToastService} from "./toast.service";
 
 @Component({
   selector: 'app-toast',
   standalone: true,
-  imports: [CommonModule, NgbToast],
+  imports: [NgbToast, NgClass, NgForOf],
   templateUrl: './toast.component.html',
   styleUrls: ['./toast.component.css']
 })

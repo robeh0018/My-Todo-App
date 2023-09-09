@@ -9,7 +9,6 @@ import {provideEffects} from "@ngrx/effects";
 import {AuthEffects} from "./app/auth/store/auth.effects";
 import {TodoEffects} from "./app/todo/store/todo.effects";
 
-
 export const appConfig = {
   providers: [
     provideRouter(appRoutes),
@@ -17,6 +16,6 @@ export const appConfig = {
     provideHttpClient(),
     importProvidersFrom(),
     provideStoreDevtools({maxAge: 25, logOnly: !isDevMode()}),
-    provideEffects([AuthEffects, TodoEffects])
+    provideEffects([AuthEffects, TodoEffects]),
   ]
 };

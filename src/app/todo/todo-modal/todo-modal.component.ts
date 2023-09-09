@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store/app.reducer";
 import {selectTodosState} from "../store/todo.selectors";
@@ -14,9 +14,10 @@ import {ToastService} from "../../shared/toast/toast.service";
   selector: 'app-todo-modal',
   standalone: true,
   imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule,
+    NgClass,
+    NgIf
+  ],
   templateUrl: './todo-modal.component.html',
   styleUrls: ['./todo-modal.component.css']
 })

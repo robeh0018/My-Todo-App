@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {NgClass, NgIf} from '@angular/common';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgbAlert} from "@ng-bootstrap/ng-bootstrap";
 import {RouterLink} from "@angular/router";
 import {AppState} from "../store/app.reducer";
@@ -18,7 +18,13 @@ import {Subscription} from "rxjs";
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgbAlert, ReactiveFormsModule, RouterLink],
+  imports: [
+    NgbAlert,
+    RouterLink,
+    NgIf,
+    NgClass,
+    ReactiveFormsModule
+  ],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.css']
 })

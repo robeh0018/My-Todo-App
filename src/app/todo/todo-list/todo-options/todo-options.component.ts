@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import {TodoModalComponent} from "../../todo-modal/todo-modal.component";
 import {NgbModal, NgbOffcanvas, NgbTooltip} from "@ng-bootstrap/ng-bootstrap";
 import {Store} from "@ngrx/store";
@@ -13,7 +13,7 @@ import {ToastService} from "../../../shared/toast/toast.service";
 @Component({
   selector: 'app-todo-options',
   standalone: true,
-  imports: [CommonModule, NgbTooltip],
+  imports: [NgbTooltip, AsyncPipe],
   templateUrl: './todo-options.component.html',
   styleUrls: ['./todo-options.component.css']
 })
@@ -57,7 +57,7 @@ export class TodoOptionsComponent implements OnInit {
   onDeleteTodo() {
     this.store.dispatch(startDeleteTodoAction());
 
-    this.toastService.show('Todo deleted successfully!', { customClass: 'bg-danger'})
+    this.toastService.show('Todo deleted successfully!', {customClass: 'bg-danger'})
   };
 
 }
